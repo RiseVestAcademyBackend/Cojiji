@@ -54,3 +54,16 @@ exports.updateAd = async(req, res) => {
     }
 }
 
+exports.deleteAd = async(req, res) => {
+    try{
+        const ad = await Ad.findByPk(req.params.id);
+        if(!ad){
+            return res.status(404).json({message:"Ad not found"})
+        }
+        ad.destroy();
+        res.json({message: "Ad deleted successfully"})
+    }
+    catch(error){
+        res.status(500).json({message: "Error deleting ad", error:error.message});
+    }
+}
