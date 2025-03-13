@@ -1,12 +1,12 @@
 const Ad = require("../models/ad")
 
-//Create and post an ad
+// Create and post an ad
 exports.createAd = async(req, res) => {
     try{
-        const {title, description, price,category, photo, sellerId} = req.body;
-        const newAd = await Ad.create({title, description, price,category, photo, sellerId})
+        const {title, description, price, category, photo, sellerId} = req.body;
+        const newAd = await Ad.create({title, description, price, category, photo, sellerId})
         res.status(201).json(newAd)
-    }
+    }  
     catch(error){
         res.status(500).json({message: "Error creating ad", error:error.message});
     }
@@ -41,7 +41,7 @@ exports.getAdById = async(req, res) => {
 //Edit or Update Ad
 exports.updateAd = async(req, res) => {
     try{
-        const {title, description, price,category, photo} = req.body;
+        const {title, description, price, category, photo} = req.body;
         const ad = await Ad.findByPk(req.params.id);
         if(!ad){
             return res.status(404).json({message:"Ad not found"})
