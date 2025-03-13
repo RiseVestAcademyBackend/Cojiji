@@ -8,7 +8,8 @@ Ad.init(
     {
         id: {
             type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4
+            defaultValue: DataTypes.UUIDV4,
+            primaryKey: true
         },
         title: {
             type: DataTypes.STRING,
@@ -30,15 +31,7 @@ Ad.init(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
-        //Foreign key linking ad to seller
-        sellerId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: Seller,
-                key: "id"
-            }
-        }
+       
     },
     {
         sequelize,
@@ -47,9 +40,9 @@ Ad.init(
 );
 
 //Every ad must belong to a seller
-Ad.belongsTo(Seller, { foreignKey: "sellerId" });
+Ad.belongsTo(Seller);
 
 //A seller can have many ads linked to him
-Seller.hasMany(Ad, { foreignKey: "sellerId" })
+Seller.hasMany(Ad)
 
 module.exports = Ad;
