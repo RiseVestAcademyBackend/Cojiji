@@ -6,6 +6,11 @@ class Ad extends Model{}
 
 Ad.init(
     {
+        id: {
+            type: DataTypes.UUID,
+            primaryKey: true,
+            allowNull:false,
+          },
         title:{
             type: DataTypes.STRING,
             allowNull: false,
@@ -22,9 +27,17 @@ Ad.init(
             type: DataTypes.STRING,
             allowNull: false,
         },
+        category:{
+            type:DataTypes.STRING,
+            allowNull: false,
+        },
         boosted:{
             type: DataTypes.BOOLEAN,
             defaultValue: false,
+        },
+        status:{
+            type: DataTypes.ENUM("available", "sold"),
+            defaultValue: "available"
         },
         //Foreign key linking ad to seller
         sellerId:{
