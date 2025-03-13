@@ -27,7 +27,7 @@ Buyer.init(
             unique: true,
         },
         password: {
-            type: DataTypes.h,
+            type: DataTypes.STRING,
             allowNull: false,
         },
         is_verified: {

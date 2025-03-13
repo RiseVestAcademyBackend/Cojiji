@@ -9,6 +9,12 @@ var usersRouter = require('./routes/users');
 var buyersRouter = require('./routes/buyers');
 
 var sequelize = require("./config/database");
+const Ad = require('./models/ad');
+const Buyer = require('./models/buyer');
+const Favourite = require('./models/favourite');
+const Seller = require('./models/seller');
+const Orders = require('./models/orders');
+
 
 var app = express();
 
@@ -50,6 +56,7 @@ app.use(function (err, req, res, next) {
       .sync({ alter: true }) // Use { force: true } if you want to drop & recreate tables
       .then(() => console.log("> Database & tables created!"))
       .catch((err) => console.error("> Error syncing database:", err));
+      
 
     console.log("> Database connected successfully!");
   } catch (error) {

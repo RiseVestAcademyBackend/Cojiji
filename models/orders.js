@@ -14,8 +14,10 @@ Order.init(
             defaultValue: DataTypes.UUIDV4
         },
         status: {
-            type: DataTypes.ENUM(["failed", "inprogress", "successful"]),
-            defaultValue: DataTypes.ENUM("inprogress"),
+            type: DataTypes.ENUM,
+            values: ["failed", "inprogress", "successful"],
+
+            defaultValue: "inprogress",
             allowNull: false
         }
     },
