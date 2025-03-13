@@ -1,36 +1,40 @@
-const {Model, DataTypes} = require("sequelize");
+const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 const Seller = require("./seller");
 
-class Ad extends Model{}
+class Ad extends Model { }
 
 Ad.init(
     {
-        title:{
+        id: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4
+        },
+        title: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        description:{
+        description: {
             type: DataTypes.TEXT,
             allowNull: false,
         },
-        price:{
+        price: {
             type: DataTypes.FLOAT,
-            allowNull:false,
+            allowNull: false,
         },
-        photo:{
+        photo: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        boosted:{
+        boosted: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
         //Foreign key linking ad to seller
-        sellerId:{
+        sellerId: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            references:{
+            references: {
                 model: Seller,
                 key: "id"
             }
@@ -43,9 +47,9 @@ Ad.init(
 );
 
 //Every ad must belong to a seller
-Ad.belongsTo(Seller, {foreignKey: "sellerId"});
+Ad.belongsTo(Seller, { foreignKey: "sellerId" });
 
 //A seller can have many ads linked to him
-Seller.hasMany(Ad, {foreignKey: "sellerId"})
+Seller.hasMany(Ad, { foreignKey: "sellerId" })
 
 module.exports = Ad;
