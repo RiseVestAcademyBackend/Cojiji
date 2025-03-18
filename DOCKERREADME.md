@@ -12,7 +12,8 @@ ALTERNATIVE 1 (Use postgres installed on your local machine)
 - Update `DB_HOST=host.docker.internal` in your .env file instead of localhost
 
 ALTERNATIVE 2 (Use postgres docker image):
-- Run `docker run -d --name <container-name> -e POSTGRES_USER=<user> -e POSTGRES_PASSWORD=<password> -e POSTGRES_DB=<db-name> -p 5432:5432 postgres`
+- Run `docker run -d --name <container-name> -e POSTGRES_USER=<user> -e POSTGRES_PASSWORD=<password> -e POSTGRES_DB=<db-name> -p 5432:5432 -v postgres_data:/var/lib/postgresql/data postgres`
+
 - Update your .env with the POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_D, container name as the host, and the Port used above.
 - Use `docker exec -it <pg-container-name> psql -U <user>` to open PostgreSQL interactive terminal
 - Create the database in the interactive shell using `CREATE DATABASE <database-name>;`
