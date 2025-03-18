@@ -1,0 +1,53 @@
+services:
+  pg-service:
+    image: postgres:17.4
+    container_name: pg_container
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  node-app:
+    build: .
+    container_name: cojiji
+    depends_on:
+      - pg-service
+    env_file:
+      - .env
+    environment:
+      - CHOKIDAR_USEPOLLING=1
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/node-app
+      - /node-app/node_modules
+    develop:
+      watch:
+        - action: sync
+          path: ./node-app
+          target: /node-app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
+        - action: rebuild
+          path: config
+        - action: rebuild
+          path: controllers
+        - action: rebuild
+          path: models
+        - action: rebuild
+          path: public
+        - action: rebuild
+          path: routes
+        - action: rebuild
+          path: views
+    command: [ "npx", "nodemon", "./bin/www" ]
+
+volumes:
+  postgres_data:
