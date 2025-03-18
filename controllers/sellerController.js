@@ -54,6 +54,7 @@ exports.updateAd = async(req, res) => {
     }
 }
 
+
 exports.deleteAd = async(req, res) => {
     try{
         const ad = await Ad.findByPk(req.params.id);
@@ -65,5 +66,20 @@ exports.deleteAd = async(req, res) => {
     }
     catch(error){
         res.status(500).json({message: "Error deleting ad", error:error.message});
+    }
+}
+
+
+exports.boostAd = async(req, res) => {
+    try{
+        const ad = await Ad.findByPk(req.params.id);
+        if(!ad){
+            return res.status(404).json({message:"Ad not found"})
+        }
+        ad.update({boosted:true})
+        res.json({message: "Ad boosted successfully"})
+    }
+    catch(error){
+        res.status(500)
     }
 }
