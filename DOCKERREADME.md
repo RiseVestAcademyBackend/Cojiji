@@ -24,7 +24,7 @@ To build the Docker image, run the following command:
 `docker build -t <image-name:tag> .`
 
 🚀 Run the Container
-`docker run --env-file .env -d --name <container-name> -p 3000:3500 <image-name:tag>`
+`docker run --env-file .env -d --name <container-name> -p 3000:3000 <image-name:tag>`
 
 📌 Extras
 
