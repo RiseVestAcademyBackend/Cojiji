@@ -5,6 +5,7 @@ const Comment = require("./Comment");
 
 class Moderation extends Model {}
 
+
 Moderation.init(
     {
     id: {

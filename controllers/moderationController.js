@@ -95,6 +95,7 @@ exports.getReportedScams = async (req, res) => {
             ]
         });
 
+        
         return res.status(200).json(reportedUsers);
     } catch (error) {
         console.error(error);
