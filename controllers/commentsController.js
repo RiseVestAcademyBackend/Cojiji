@@ -1,5 +1,4 @@
 const Joi = require('joi');
-const sanitize = require('sanitize-html');
 
 const Ad = require("../models/ad");
 const Buyer = require("../models/buyer");
@@ -32,23 +31,25 @@ exports.createComment = async (req, res) => {
   try {
     const { adId } = await commentParamsSchema.validateAsync(req.params)
       const {buyer, comment} = await commentSchema.validateAsync(req.body);
-
+      
+    
       const [_buyer, _ad] = await Promise.all([
-        buyerModel.findByPk(buyer),
-        adModel.findByPk(adId)
+        Buyer.findByPk(buyer),
+        Ad.findByPk(adId)
       ])
 
       if (!_buyer || !_ad) {
           return res.status(404).json({ message: 'Buyer or Ad not found.' });
       }
 
-      const _comment = await commentModel.create({
+      const _comment = await Comments.create({
           buyerId: buyer,
           adId: adId,
-          content: comment
+          content: comment,
+          votes: 0
       });
 
-      res.status(200).json({ message: 'Comment created', _comment });
+      res.status(201).json({ message: 'Comment created', comment: _comment });
   } catch (error) {
       res.status(500).json({ message: 'Error creating comment', error });
   }
@@ -60,7 +61,7 @@ exports.updateComment = async (req, res) => {
     const { commentId } = await editParamsSchema.validateAsync(req.params);
     const { comment } = await editSchema.validateAsync(req.body);
 
-    const _comment = await commentModel.findByPk(commentId);
+    const _comment = await Comments.findByPk(commentId);
 
     if (!_comment) {
       return res.status(404).json({ message: "Comment not found." });
@@ -86,13 +87,16 @@ exports.voteComment = async (req, res) => {
   try {
     const { commentId, vote } = await voteParamsSchema.validateAsync(req.params);
 
-    const _comment = await commentModel.findByPk(commentId);
-
+    const _comment = await Comments.findByPk(commentId);
     if (!_comment) {
       return res.status(404).json({ message: "Comment not found." });
     }
-
-    _comment.votes = _comment.votes + vote == "upvote" ? 1 : -1;
+    if(vote== "upvote"){
+      _comment.votes += 1
+    } else {
+      _comment.votes -= 1
+    }
+    
     await _comment.save();
 
     res.status(200).json({ message: "Vote successful", _comment });

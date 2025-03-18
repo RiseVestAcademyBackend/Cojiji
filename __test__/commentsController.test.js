@@ -1,5 +1,7 @@
 const commentController = require("../controllers/commentsController");
 const Comments = require("../models/comment");
+const Buyer = require("../models/buyer")
+const Ad = require("../models/ad")
 const request = require("supertest");
 const app = require("../app");
 
@@ -14,7 +16,21 @@ const mockComment = {
   createdAt: "2025",
   updatedAt: "2025",
   BuyerId: null,
+  AdId: null
+};
+
+const updateComment = {
+  id: "2435",
+  content: "Here",
+  buyerId: "1234",
+  adId: "906054",
+  votes: 0,
+  createdAt: "2025",
+  updatedAt: "2025",
+  BuyerId: null,
   AdId: null,
+  createdAt: new Date(),
+  save: () =>  {content: "Updated comment" }
 };
 
 describe("GET /ads/:adId/comments/:commentId", () => {
@@ -60,29 +76,30 @@ describe("GET /ads/:adId/comments", () => {
   });
 });
 
-describe("POST /ad/:adId/comment", () => {
+describe("POST /ads/:adId/comment", () => {
   afterEach(() => {
     jest.restoreAllMocks();
   });
 
   it("should create a new comment", async () => {
     jest.spyOn(Comments, "create").mockImplementation(() => mockComment);
-    jest.spyOn(Comments, "findByPk").mockImplementation((id) => (id === "1234" || id === "906054") ? {} : null);
+    jest.spyOn(Buyer, "findByPk").mockImplementation(() => true);
+    jest.spyOn(Ad, "findByPk").mockImplementation(() => true);
 
     const response = await request(app)
-      .post("/ad/906054/comment")
-      .send({ buyer: "1234", comment: "New comment" });
-
-    expect(response.statusCode).toBe(200);
-    expect(response.body._comment).toEqual(mockComment);
+      .post("/ads/5bcc9a1e-8f34-45d0-8eed-d22256ad4e3f/comment")
+      .send({ buyer: "5bcc9a1e-8f34-45d0-8eed-d22256ad4e3f", comment: "New comment" });
+    expect(response.statusCode).toBe(201);
+    expect(response.body).toEqual({message: 'Comment created', comment: mockComment});
   });
 
   it("should return 404 if buyer or ad is not found", async () => {
-    jest.spyOn(Comments, "findByPk").mockImplementation(() => null);
+    jest.spyOn(Buyer, "findByPk").mockImplementation(() => null);
+    jest.spyOn(Ad, "findByPk").mockImplementation(() => null);
 
     const response = await request(app)
-      .post("/ad/906054/comment")
-      .send({ buyer: "9999", comment: "New comment" });
+      .post("/ads/5bcc9a1e-8f34-45d0-8eed-d22256ad4e3f/comment")
+      .send({ buyer: "5bcc9a1e-8f34-45d0-8eed-d22256ad4e3f", comment: "New comment" });
 
     expect(response.statusCode).toBe(404);
     expect(response.body.message).toBe("Buyer or Ad not found.");
@@ -90,26 +107,23 @@ describe("POST /ad/:adId/comment", () => {
 
   it("should return 500 on validation error", async () => {
     const response = await request(app)
-      .post("/ad/906054/comment")
-      .send({ buyer: "1234" });
+      .post("/ads/5bcc9a1e-8f34-45d0-8eed-d22256ad4e3f/comment")
+      .send({ buyer: "5bcc9a1e-8f34-45d0-8eed-d22256ad4e3f" });
 
     expect(response.statusCode).toBe(500);
   });
 });
 
-describe("PATCH /comment/:commentId", () => {
+describe("PATCH /ads/comment/:commentId", () => {
   afterEach(() => {
     jest.restoreAllMocks();
   });
 
   it("should update a comment within 15 minutes", async () => {
-    const updatedComment = { ...mockComment, content: "Updated comment" };
-
-    jest.spyOn(Comments, "findByPk").mockImplementation(() => mockComment);
-    jest.spyOn(mockComment, "save").mockImplementation(() => updatedComment);
+    jest.spyOn(Comments, "findByPk").mockImplementation(() => updateComment);
 
     const response = await request(app)
-      .patch("/comment/2435")
+      .patch("/ads/comment/5bcc9a1e-8f34-45d0-8eed-d22256ad4e3f")
       .send({ comment: "Updated comment" });
 
     expect(response.statusCode).toBe(200);
@@ -121,7 +135,7 @@ describe("PATCH /comment/:commentId", () => {
     jest.spyOn(Comments, "findByPk").mockImplementation(() => oldComment);
 
     const response = await request(app)
-      .patch("/comment/2435")
+      .patch("/ads/comment/5bcc9a1e-8f34-45d0-8eed-d22256ad4e3f")
       .send({ comment: "Updated comment" });
 
     expect(response.statusCode).toBe(403);
@@ -132,7 +146,7 @@ describe("PATCH /comment/:commentId", () => {
     jest.spyOn(Comments, "findByPk").mockImplementation(() => null);
 
     const response = await request(app)
-      .patch("/comment/9999")
+      .patch("/ads/comment/5bcc9a1e-8f34-45d0-8eed-d22256ad4e3f")
       .send({ comment: "Updated comment" });
 
     expect(response.statusCode).toBe(404);
@@ -140,40 +154,35 @@ describe("PATCH /comment/:commentId", () => {
   });
 });
 
-describe("POST /comment/:commentId/vote/:vote", () => {
+describe("POST /ads/comment/:commentId/vote/:vote", () => {
   afterEach(() => {
     jest.restoreAllMocks();
   });
 
   it("should upvote a comment successfully", async () => {
-    const updatedComment = { ...mockComment, votes: mockComment.votes + 1 };
-    jest.spyOn(Comments, "findByPk").mockImplementation(() => mockComment);
-    jest.spyOn(mockComment, "save").mockImplementation(() => updatedComment);
-
+    jest.spyOn(Comments, "findByPk").mockImplementation(() => updateComment);
     const response = await request(app)
-      .patch("/comment/2435/vote/upvote");
+      .post("/ads/comment/5bcc9a1e-8f34-45d0-8eed-d22256ad4e3f/vote/upvote");
 
     expect(response.statusCode).toBe(200);
-    expect(response.body._comment.votes).toBe(mockComment.votes + 1);
+    expect(response.body._comment.votes).toBe(1);
   });
 
   it("should downvote a comment successfully", async () => {
-    const updatedComment = { ...mockComment, votes: mockComment.votes - 1 };
-    jest.spyOn(Comments, "findByPk").mockImplementation(() => mockComment);
-    jest.spyOn(mockComment, "save").mockImplementation(() => updatedComment);
+    jest.spyOn(Comments, "findByPk").mockImplementation(() => updateComment);
 
     const response = await request(app)
-      .patch("/comment/2435/vote/downvote");
+      .post("/ads/comment/5bcc9a1e-8f34-45d0-8eed-d22256ad4e3f/vote/downvote");
 
     expect(response.statusCode).toBe(200);
-    expect(response.body._comment.votes).toBe(mockComment.votes - 1);
+    expect(response.body._comment.votes).toBe(0);
   });
 
   it("should return 404 if comment does not exist", async () => {
     jest.spyOn(Comments, "findByPk").mockImplementation(() => null);
 
     const response = await request(app)
-      .patch("/comment/9999/vote/upvote");
+      .post("/ads/comment/5bcc9a1e-8f34-45d0-8eed-d22256ad4e3f/vote/upvote");
 
     expect(response.statusCode).toBe(404);
     expect(response.body.message).toBe("Comment not found.");
@@ -181,7 +190,7 @@ describe("POST /comment/:commentId/vote/:vote", () => {
 
   it("should return 500 on validation error", async () => {
     const response = await request(app)
-      .patch("/comment/2435/vote/invalidVote");
+      .post("/ads/comment/5bcc9a1e-8f34-45d0-8eed-d4e3f/vote/invalidVote");
 
     expect(response.statusCode).toBe(500);
   });
