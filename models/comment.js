@@ -10,7 +10,7 @@ Comments.init(
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
-      allowNull: null,
+      allowNull: false,
       primaryKey: true,
     },
     content: {
@@ -43,7 +43,7 @@ Comments.init(
   },
   {
     sequelize,
-    modelName: "comments",
+    modelName: "Comments",
   }
 );
 
