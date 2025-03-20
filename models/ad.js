@@ -41,8 +41,10 @@ Ad.init(
 
 //Every ad must belong to a seller
 Ad.belongsTo(Seller);
+Ad.belongsTo(Seller);
 
 //A seller can have many ads linked to him
+Seller.hasMany(Ad)
 Seller.hasMany(Ad)
 
 module.exports = Ad;

@@ -1,6 +1,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 var bycrt = require("bcryptjs");
+const Seller = require("./seller");
 
 class Buyer extends Model {
     ///@xutini Method to ensure verification of password -- please do not change  
@@ -31,7 +32,7 @@ Buyer.init(
             allowNull: false,
         },
         is_verified: {
-            type: DataTypes.BOOLEAN,
+            type: DataTypes.STRING,
             allowNull: true,
             defaultValue: false
         }
@@ -48,5 +49,8 @@ Buyer.init(
         }
     }
 );
+
+Buyer.belongsTo(Seller)
+Seller.hasOne(Buyer)
 
 module.exports = Buyer
