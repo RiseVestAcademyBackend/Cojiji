@@ -28,8 +28,8 @@ Order.init(
 //@xutini notice how I did not set any fields for the Ids , it is intentional , they would be set on auto
 
 // also notice the order to Ad is a m-m rel , take heed in your queries
-Buyer.hasMany(Order)
-Order.belongsTo(Buyer)
+Buyer.hasMany(Order);
+Order.belongsTo(Buyer);
 
 Order.belongsToMany(Ad, { through: 'OrderAd' }); // Join table 'OrderAd'
 Ad.belongsToMany(Order, { through: 'OrderAd' });

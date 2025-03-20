@@ -31,7 +31,7 @@ Buyer.init(
             allowNull: false,
         },
         is_verified: {
-            type: DataTypes.BOOLEAN,
+            type: DataTypes.STRING,
             allowNull: true,
             defaultValue: false
         }

@@ -1,10 +1,23 @@
-//viewOrderHistory testing
 const { viewOrderHistory, verifyAccount, saveFavourite } = require("../controllers/buyerController");
 const Order = require("../models/orders");
 const Buyer = require("../models/buyer");
+const Ad = require("../models/ad");
+const Favourite = require("../models/favourite");
 
-jest.mock("../models/orders");  
-jest.mock("../models/buyer");
+jest.mock("../models/orders", ()=>({
+  findAll:jest.fn(),
+}));  
+jest.mock("../models/buyer", ()=>({
+  findByPk: jest.fn(),
+}));
+jest.mock("../models/ad", ()=>({
+  findByPk: jest.fn(),
+}));
+jest.mock("../models/favourite", ()=>({
+  create: jest.fn(),
+}));
+
+ ////viewOrderHistory testing-----------------------------------------------------------------------
 
 describe("viewOrderHistory", () => {
     let req, res;
@@ -66,8 +79,10 @@ describe("viewOrderHistory", () => {
     });
 });
 
+//------------------------------------------------------------------
 
-//verifyBuyer testing
+//verifyBuyer testing---------------------------------------------------------
+
 describe("verifyAccount", () => {
     let req, res;
     beforeEach(() => {
@@ -135,8 +150,81 @@ describe("verifyAccount", () => {
 });
 
 
+//-------------------------------------------------------------------------------------
 
 
 
+//saveFavorite testing----------------------------------------------
 
-//saveFavoritw testing
+describe('saveFavourite', () => {
+  let req, res;
+
+  beforeEach(() => {
+    req = {
+      body: {
+        buyerId: 'buyer-id-123',
+        adId: 'ad-id-123',
+      },
+    };
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+  });
+  afterEach(() => {
+    jest.clearAllMocks(); // Clear mocks after each test
+});
+
+  it('should return 404 if buyer or ad is not found', async () => {
+    
+    Buyer.findByPk.mockResolvedValue(null); // Buyer not found
+    Ad.findByPk.mockResolvedValue(null); // Ad not found
+
+    // Call the controller function
+    await saveFavourite(req, res);
+
+    // Assertationss
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Buyer or Ad not found.' });
+  });
+
+  it('should return 200 and save the favourite if buyer and ad exist', async () => {
+    // Mock the database responses
+    Buyer.findByPk.mockResolvedValue({ id: 'buyer-id-123' }); // Buyer found
+    Ad.findByPk.mockResolvedValue({ id: 'ad-id-123' }); // Ad found
+    Favourite.create.mockResolvedValue({
+      id: 'favourite-id-123',
+      BuyerId: 'buyer-id-123',
+      AdId: 'ad-id-123',
+    });
+
+    // Call the controller function
+    await saveFavourite(req, res);
+
+    // Assert the response
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: 'Ad saved to favourites.',
+      favourite: {
+        id: 'favourite-id-123',
+        BuyerId: 'buyer-id-123',
+        AdId: 'ad-id-123',
+      },
+    });
+  });
+
+  it('should return 500 if an error occurs', async () => {
+    // Force an error
+    Favourite.create.mockRejectedValue(new Error('Some error'));
+
+    // Call the controller function
+    await saveFavourite(req, res);
+
+    // Assert the response
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      message: 'Error saving to favourites',
+      error: expect.any(Error),
+    });
+  });
+});
