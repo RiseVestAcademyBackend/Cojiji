@@ -15,7 +15,7 @@ Order.init(
         },
         status: {
             type: DataTypes.ENUM(["failed", "inprogress", "successful"]),
-            defaultValue: DataTypes.ENUM("inprogress"),
+            defaultValue: "inprogress",
             allowNull: false
         }
     },
