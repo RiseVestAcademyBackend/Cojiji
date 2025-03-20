@@ -11,6 +11,11 @@ Ad.init(
             defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
         },
+        quantity: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 1
+        },
         title: {
             type: DataTypes.STRING,
             allowNull: false,

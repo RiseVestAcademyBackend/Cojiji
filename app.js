@@ -47,7 +47,7 @@ app.use(function (err, req, res, next) {
   try {
     await sequelize.authenticate();
     sequelize
-      .sync({ force: true }) // Use { force: true } if you want to drop & recreate tables
+      .sync({ force: true }) 
       .then(() => console.log("> Database & tables created!"))
       .catch((err) => console.error("> Error syncing database:", err));
 
