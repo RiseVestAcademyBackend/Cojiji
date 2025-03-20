@@ -21,7 +21,7 @@ describe("Ad Controller Tests", () => {
       category: "Electronics",
       boosted: "true",
       status: "available",
-      sellerId:"1"
+      sellerId:"10"
     };
     Ad.create.mockResolvedValue(mockAd)
     
@@ -83,5 +83,24 @@ describe("Ad Controller Tests", () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockAd)
       expect(Ad.findByPk).toHaveBeenCalledWith("2")
+  });
+
+  it("should boost a specific ad",async() =>{
+    const mockAd = {
+        id: 2,
+        title: "LED strip light",
+        description: "10m LED light for decoration",
+        price: "N7,000",
+        photo:"",
+        category: "Electronics",
+        boosted: "true",
+        status: "available",
+        sellerId:"100"
+      };
+      Ad.findByPk.mockResolvedValue(mockAd);
+      const response = await request(app).get("/ads/100");
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(mockAd)
+      expect(Ad.findByPk).toHaveBeenCalledWith("100")
   })
 });
