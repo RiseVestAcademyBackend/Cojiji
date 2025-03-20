@@ -3,8 +3,8 @@ const Ad = require("../models/ad")
 // Create and post an ad
 exports.createAd = async(req, res) => {
     try{
-        const {title, description, price, category, photo, sellerId} = req.body;
-        const newAd = await Ad.create({title, description, price, category, photo, sellerId})
+        const {title, description, price, category, photo, sellerId, boosted, status} = req.body;
+        const newAd = await Ad.create({title, description, price, category, photo, sellerId, boosted: boosted || 'false', status: status|| 'available'})
         res.status(201).json(newAd)
     }  
     catch(error){

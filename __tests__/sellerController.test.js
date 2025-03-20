@@ -14,7 +14,6 @@ jest.mock("../models/ad", () => ({
 describe("Ad Controller Tests", () => {
   it("should create an ad successfully", async () => {
     const mockAd = {
-      id: 1,
       title: "Test Ad",
       description: "My first test ad",
       price: "N5,000",
@@ -25,10 +24,13 @@ describe("Ad Controller Tests", () => {
       sellerId:"1"
     };
     Ad.create.mockResolvedValue(mockAd)
+    
+    
     const response = await request(app).post("/ads").send(mockAd);
     expect(response.status).toBe(201);
     expect(response.body).toEqual(mockAd)
-    expect(Ad.create).toHaveBeenCalledWith(mockAd)
+    expect(Ad.create).toHaveBeenCalledWith(mockAd);
+
   });
 
   it("should get all ads", async()=>{
