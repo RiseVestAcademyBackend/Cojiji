@@ -30,7 +30,7 @@ const updateComment = {
   BuyerId: null,
   AdId: null,
   createdAt: new Date(),
-  save: () =>  {content: "Updated comment" }
+  save: () => { content: "Updated comment" }
 };
 
 describe("GET /ads/:adId/comments/:commentId", () => {
@@ -90,7 +90,7 @@ describe("POST /ads/:adId/comment", () => {
       .post("/ads/5bcc9a1e-8f34-45d0-8eed-d22256ad4e3f/comment")
       .send({ buyer: "5bcc9a1e-8f34-45d0-8eed-d22256ad4e3f", comment: "New comment" });
     expect(response.statusCode).toBe(201);
-    expect(response.body).toEqual({message: 'Comment created', comment: mockComment});
+    expect(response.body).toEqual({ message: 'Comment created', comment: mockComment });
   });
 
   it("should return 404 if buyer or ad is not found", async () => {
