@@ -3,10 +3,10 @@ const router = express.Router();
 const adminController = require("../controllers/adminController");
 
 // delete a post
-router.delete("/posts/:postId", adminController.deletePost);
+router.delete("/posts/:postId", adminController.deleteAd);
 
 // approve/reject posts
-router.put("/posts/:postId/status", adminController.approveOrRejectPost);
+router.put("/posts/:postId/status", adminController.approveOrRejectAd);
 
 // manage ads
 router.post("/ads", adminController.createAd);
@@ -15,7 +15,6 @@ router.delete("/ads/:adId", adminController.deleteAd);
 
 // ban users or flag content
 router.put("/users/:userId/ban", adminController.banUser);
-router.put("/posts/:postId/flag", adminController.flagContent);
 
 // view reports
 router.get("/reports", adminController.viewReports);
