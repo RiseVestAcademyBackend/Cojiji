@@ -1,11 +1,17 @@
-const Post = require("./post");
-const User = require("./user");
 const Ad = require("./ad");
 const Report = require("./report");
+const Favourite = require("./favourite");
+const Admin = require("./admin");
+const Order = require("./orders");
+const Seller = require("./seller");
+const Buyer = require("./buyer");
 
 module.exports = {
-  Post,
-  User,
-  Ad,
+  Favourite,
   Report,
+  Ad,
+  Admin,
+  Order,
+  Seller,
+  Buyer
 };

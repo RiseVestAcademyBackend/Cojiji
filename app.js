@@ -7,6 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var buyersRouter = require('./routes/buyers');
+var adminRouter = require('./routes/adminRoutes');
 
 var sequelize = require("./config/database");
 
@@ -24,7 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use("/admin", adminRoutes);
+app.use("/admin", adminRouter);
 app.use('/buyers', buyersRouter);
 
 // catch 404 and forward to error handler

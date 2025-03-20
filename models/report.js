@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
-const User = require("./user");
-const Post = require("./post");
+const Ad = require("./ad");
+const Buyer = require("./buyer");
 
-class Report extends Model {}
+class Report extends Model { }
 
 Report.init(
   {
@@ -20,24 +20,6 @@ Report.init(
       type: DataTypes.ENUM("pending", "resolved"),
       defaultValue: "pending",
     },
-    // Foreign key linking report to the user who reported
-    reporterId: {
-      type: DataTypes.UUID,
-      allowNull: false,
-      references: {
-        model: User,
-        key: "id",
-      },
-    },
-    // Foreign key linking report to the post being reported
-    postId: {
-      type: DataTypes.UUID,
-      allowNull: false,
-      references: {
-        model: Post,
-        key: "id",
-      },
-    },
   },
   {
     sequelize,
@@ -46,15 +28,15 @@ Report.init(
 );
 
 // Every report must belong to a user (reporter)
-Report.belongsTo(User, { foreignKey: "reporterId" });
+Report.belongsTo(Buyer, { foreignKey: "reporterId" });
 
 // A user can have many reports
-User.hasMany(Report, { foreignKey: "reporterId" });
+Buyer.hasMany(Report, { foreignKey: "reporterId" });
 
 // Every report must belong to a post
-Report.belongsTo(Post, { foreignKey: "postId" });
+Report.belongsTo(Ad, { foreignKey: "postId" });
 
 // A post can have many reports
-Post.hasMany(Report, { foreignKey: "postId" });
+Ad.hasMany(Report, { foreignKey: "postId" });
 
 module.exports = Report;
