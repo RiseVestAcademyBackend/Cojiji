@@ -7,6 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var buyersRouter = require('./routes/buyers');
+var adminRouter = require('./routes/adminRoutes');
 
 var sequelize = require("./config/database");
 const Ad = require('./models/ad');
@@ -30,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use("/admin", adminRouter);
 app.use('/buyers', buyersRouter);
 
 // catch 404 and forward to error handler
@@ -53,7 +55,7 @@ app.use(function (err, req, res, next) {
   try {
     await sequelize.authenticate();
     sequelize
-      .sync({ alter: true }) // Use { force: true } if you want to drop & recreate tables
+      .sync({ force: true }) 
       .then(() => console.log("> Database & tables created!"))
       .catch((err) => console.error("> Error syncing database:", err));
       
