@@ -76,8 +76,8 @@ const adminController = {
   // ban users or flag content
   async banUser(req, res) {
     try {
-      const { userId } = req.params;
-      const user = await Buyer.findByPk(userId);
+      const { buyerId } = req.params;
+      const user = await Buyer.findByPk(buyerId);
 
       if (!user) {
         return res.status(404).json({ message: "User not found" });
