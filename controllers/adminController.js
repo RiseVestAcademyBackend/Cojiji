@@ -1,41 +1,40 @@
-const { Post, User, Ad, Report } = require("../models"); // Import our models for post, user, ads and reports
-
+const { Buyer, Ad, Admin } = require("../models"); 
 const adminController = {
-  // delete a post
-  async deletePost(req, res) {
+  // delete an ad
+  async deleteAd(req, res) {
     try {
-      const { postId } = req.params;
-      const post = await Post.findByPk(postId);
+      const { adId } = req.params;
+      const ad = await Ad.findByPk(adId);
 
-      if (!post) {
-        return res.status(404).json({ message: "Post not found" });
+      if (!ad) {
+        return res.status(404).json({ message: "Ad not found" });
       }
 
-      await post.destroy();
-      res.status(204).json({ message: "Post deleted successfully" });
+      await ad.destroy();
+      res.status(200).json({ message: "Ad deleted successfully" });
     } catch (error) {
-      res.status(500).json({ message: "Error deleting post", error: error.message });
+      res.status(500).json({ message: "Error deleting ad", error: error.message });
     }
   },
 
-  // approve/reject posts
-  async approveOrRejectPost(req, res) {
+  // approve/reject ads
+  async approveOrRejectAd(req, res) {
     try {
-      const { postId } = req.params;
+      const { adId } = req.params;
       const { status } = req.body; // status can be "approved" or "rejected"
 
-      const post = await Post.findByPk(postId);
+      const ad = await Ad.findByPk(adId);
 
-      if (!post) {
-        return res.status(404).json({ message: "Post not found" });
+      if (!ad) {
+        return res.status(404).json({ message: "Ad not found" });
       }
 
-      post.status = status;
-      await post.save();
+      ad.status = status; // Update the status
+      await ad.save();
 
-      res.status(200).json({ message: `Post ${status} successfully`, post });
+      res.status(200).json({ message: `Ad ${status} successfully`, ad });
     } catch (error) {
-      res.status(500).json({ message: "Error updating post status", error: error.message });
+      res.status(500).json({ message: "Error updating ad status", error: error.message });
     }
   },
 
@@ -43,7 +42,7 @@ const adminController = {
   async createAd(req, res) {
     try {
       const { title, description, imageUrl, link } = req.body;
-      const ad = await Ad.create({ title, description, imageUrl, link });
+      const ad = await Ad.create({ title, description, photo: imageUrl, link }); // Changed imageUrl to photo to match model
       res.status(201).json({ message: "Ad created successfully", ad });
     } catch (error) {
       res.status(500).json({ message: "Error creating ad", error: error.message });
@@ -63,7 +62,7 @@ const adminController = {
 
       ad.title = title;
       ad.description = description;
-      ad.imageUrl = imageUrl;
+      ad.photo = imageUrl; // Changed imageUrl to photo to match model
       ad.link = link;
       await ad.save();
 
@@ -73,27 +72,12 @@ const adminController = {
     }
   },
 
-  async deleteAd(req, res) {
-    try {
-      const { adId } = req.params;
-      const ad = await Ad.findByPk(adId);
-
-      if (!ad) {
-        return res.status(404).json({ message: "Ad not found" });
-      }
-
-      await ad.destroy();
-      res.status(200).json({ message: "Ad deleted successfully" });
-    } catch (error) {
-      res.status(500).json({ message: "Error deleting ad", error: error.message });
-    }
-  },
 
   // ban users or flag content
   async banUser(req, res) {
     try {
-      const { userId } = req.params;
-      const user = await User.findByPk(userId);
+      const { buyerId } = req.params;
+      const user = await Buyer.findByPk(buyerId);
 
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -108,28 +92,10 @@ const adminController = {
     }
   },
 
-  async flagContent(req, res) {
-    try {
-      const { postId } = req.params;
-      const post = await Post.findByPk(postId);
-
-      if (!post) {
-        return res.status(404).json({ message: "Post not found" });
-      }
-
-      post.isFlagged = true;
-      await post.save();
-
-      res.status(200).json({ message: "Content flagged successfully", post });
-    } catch (error) {
-      res.status(500).json({ message: "Error flagging content", error: error.message });
-    }
-  },
-
   // view reports
   async viewReports(req, res) {
     try {
-      const reports = await Report.findAll();
+      const reports = await Admin.findAll(); // Changed to Admin.findAll()
       res.status(200).json({ reports });
     } catch (error) {
       res.status(500).json({ message: "Error fetching reports", error: error.message });

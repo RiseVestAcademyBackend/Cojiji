@@ -4,24 +4,32 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "jest"
+    "test": "jest --silent",
+    "migrate": "npx sequelize-cli db:migrate",
+    "migrate:undo": "npx sequelize-cli db:migrate:undo:all",
+    "migrate:undo:recent": "npx sequelize-cli db:migrate:undo",
+    "seed": "npx sequelize-cli db:seed:all",
+    "seed:undo": "npx sequelize-cli db:seed:undo:all",
+    "seed:undo:recent": "npx sequelize-cli db:seed:undo"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^16.4.7",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "joi": "^17.13.3",
     "morgan": "~1.9.1",
-    "pg": "^8.14.0",
+    "pg": "^8.14.1",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.37.6"
+    "supertest": "^7.1.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",
-    "sequelize-test-helpers": "^1.4.3",
-    "sinon": "^19.0.2",
-    "supertest": "^7.0.0"
+    "jest-cli": "^29.7.0",
+    "sequelize": "^6.37.6",
+    "sequelize-cli": "^6.6.2"
   }
 }
