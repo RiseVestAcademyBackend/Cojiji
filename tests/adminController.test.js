@@ -1,7 +1,6 @@
 const adminController = require("../controllers/adminController");
 const { Post, User, Ad, Report } = require("../models");
 
-// Mock Sequelize models
 jest.mock("../models", () => ({
   Post: {
     findByPk: jest.fn(),
@@ -24,7 +23,6 @@ describe("Admin Controller", () => {
   let req, res;
 
   beforeEach(() => {
-    // Mock request and response objects
     req = {
       params: {},
       body: {},
@@ -36,10 +34,9 @@ describe("Admin Controller", () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks(); // Clear mocks after each test
+    jest.clearAllMocks(); 
   });
 
-  // Test 1: Delete a Post
   describe("deletePost", () => {
     it("should delete a post and return success message", async () => {
       req.params.postId = "123";
@@ -65,7 +62,7 @@ describe("Admin Controller", () => {
       expect(res.json).toHaveBeenCalledWith({ message: "Post not found" });
     });
   });
-  // Test 2: Approve/Reject Posts
+  
   describe("approveOrRejectPost", () => {
     it("should approve a post and return success message", async () => {
       req.params.postId = "123";
@@ -98,7 +95,6 @@ describe("Admin Controller", () => {
     });
   });
 
-  // Test 3: Ban Users
   describe("banUser", () => {
     it("should ban a user and return success message", async () => {
       req.params.userId = "123";
@@ -115,7 +111,7 @@ describe("Admin Controller", () => {
     });
   });
 
-  // Test 4: View Reports
+  
   describe("viewReports", () => {
     it("should fetch all reports and return them", async () => {
       const mockReports = [{ id: "1", reason: "Spam" }];
