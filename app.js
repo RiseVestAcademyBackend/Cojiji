@@ -7,7 +7,8 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var buyersRouter = require('./routes/buyers');
-const moderationRouter = require("./routes/moderation");
+var adminRouter = require('./routes/adminRoutes');
+const commentsRouter = require('./routes/comments');
 
 var sequelize = require("./config/database");
 const Ad = require('./models/ad');
@@ -15,7 +16,7 @@ const Buyer = require('./models/buyer');
 const Favourite = require('./models/favourite');
 const Seller = require('./models/seller');
 const Orders = require('./models/orders');
-const Moderation = require('./models/moderation')
+const Comments = require('./models/comment');
 
 
 var app = express();
@@ -32,8 +33,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use("/admin", adminRouter);
 app.use('/buyers', buyersRouter);
-app.use('/moderation', moderationRouter);
+app.use('/ads', commentsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -56,7 +58,7 @@ app.use(function (err, req, res, next) {
   try {
     await sequelize.authenticate();
     sequelize
-      .sync({ alter: true }) // Use { force: true } if you want to drop & recreate tables
+      .sync({ force: true }) 
       .then(() => console.log("> Database & tables created!"))
       .catch((err) => console.error("> Error syncing database:", err));
       
