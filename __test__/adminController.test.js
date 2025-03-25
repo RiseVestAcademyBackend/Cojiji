@@ -116,27 +116,27 @@ describe("Admin Controller", () => {
   // Test 3: Ban Users (Adjusted to use Buyer model)
   describe("banUser", () => {
     it("should ban a user and return success message", async () => {
-      const userId = uuidv4();
-      req.params.userId = userId;
-      const mockUser = { id: userId, status: "active", save: jest.fn().mockResolvedValue() }; // Added status
+      const buyerId = uuidv4();
+      req.params.buyerId = buyerId;
+      const mockUser = { id: buyerId, status: "active", save: jest.fn().mockResolvedValue() }; // Added status
       Buyer.findByPk.mockResolvedValue(mockUser);
 
       await adminController.banUser(req, res);
 
-      expect(Buyer.findByPk).toHaveBeenCalledWith(userId);
+      expect(Buyer.findByPk).toHaveBeenCalledWith(buyerId);
       expect(mockUser.status).toBe("banned"); // Check status
       expect(mockUser.save).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({ message: "User banned successfully", user: mockUser }); //Corrected message
     });
     it("should return 404 if user is not found", async () => {
-      const userId = uuidv4();
-      req.params.userId = userId;
+      const buyerId = uuidv4();
+      req.params.buyerId = buyerId;
       Buyer.findByPk.mockResolvedValue(null);
 
       await adminController.banUser(req, res);
 
-      expect(Buyer.findByPk).toHaveBeenCalledWith(userId);
+      expect(Buyer.findByPk).toHaveBeenCalledWith(buyerId);
       expect(res.status).toHaveBeenCalledWith(404);
       expect(res.json).toHaveBeenCalledWith({ message: "User not found" });
     });
