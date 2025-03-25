@@ -4,7 +4,13 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "jest --silent"
+    "test": "jest --silent",
+    "migrate": "npx sequelize-cli db:migrate",
+    "migrate:undo": "npx sequelize-cli db:migrate:undo:all",
+    "migrate:undo:recent": "npx sequelize-cli db:migrate:undo",
+    "seed": "npx sequelize-cli db:seed:all",
+    "seed:undo": "npx sequelize-cli db:seed:undo:all",
+    "seed:undo:recent": "npx sequelize-cli db:seed:undo"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
