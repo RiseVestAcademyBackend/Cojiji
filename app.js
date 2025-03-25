@@ -56,10 +56,6 @@ app.use(function (err, req, res, next) {
   try {
     await sequelize.authenticate();
     sequelize;
-    sequelize
-      .sync()
-      .then(() => console.log("> Database & tables created!"))
-      .catch((err) => console.error("> Error syncing database:", err));
 
     console.log("> Database connected successfully!");
   } catch (error) {
