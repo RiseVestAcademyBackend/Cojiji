@@ -1,7 +1,12 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 var bycrt = require("bcryptjs");
+const Seller = require("./seller");
+const Admin = require("./admin");
 
+/**
+ * Buyer Model is the base model since everybody can be a buyer .
+ */
 class Buyer extends Model {
     ///@xutini Method to ensure verification of password -- please do not change  
     async verify(password) {
@@ -17,7 +22,7 @@ Buyer.init(
             allowNull: false,
             defaultValue: DataTypes.UUIDV4
         },
-        name: {
+        fullname: {
             type: DataTypes.STRING,
             allowNull: false,
         },
@@ -31,7 +36,7 @@ Buyer.init(
             allowNull: false,
         },
         is_verified: {
-            type: DataTypes.BOOLEAN,
+            type: DataTypes.STRING,
             allowNull: true,
             defaultValue: false
         }
@@ -48,5 +53,13 @@ Buyer.init(
         }
     }
 );
+// Sellers have shared info in the buyers , I could write an inheritance but that would be too complex
+
+Buyer.belongsTo(Seller)
+Seller.hasOne(Buyer)
+
+// admins have shared info in the buyers , I could write an inheritance but that would be too complex
+Buyer.belongsTo(Admin)
+Admin.hasOne(Buyer)
 
 module.exports = Buyer
