@@ -1,7 +1,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 const User = require("./seller");
-const Comment = require("./Comment");
+const Comment = require("./comment");
 
 class Moderation extends Model {}
 
