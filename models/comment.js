@@ -48,10 +48,10 @@ Comments.init(
 );
 
 // Every comment must belong to a buyer
-Comments.belongsTo(Buyer);
+Comments.belongsTo(Buyer, { foreignKey: "buyerId", as: "buyer" });
+Comments.belongsTo(Ad, { foreignKey: "adId", as: "ad" });
 
-// A buyer and an Ad can have many comments linked to them
-Buyer.hasMany(Comments);
-Ad.hasMany(Comments);
+Buyer.hasMany(Comments, { foreignKey: "buyerId" });
+Ad.hasMany(Comments, { foreignKey: "adId" });
 
 module.exports = Comments;
